@@ -1,0 +1,7 @@
+// 애플리케이션 계층 - 유즈케이스와 포트 정의
+dependencies {
+    implementation project(':spotprice-domain')
+
+    // 트랜잭션 추상화만 사용 (구현은 infrastructure에서)
+    compileOnly 'org.springframework:spring-tx:6.2.2'
+}

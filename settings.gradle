@@ -1,0 +1,6 @@
+rootProject.name = "spotprice"
+
+include "spotprice-api"
+include "spotprice-domain"
+include "spotprice-application"
+include "spotprice-infrastructure"
