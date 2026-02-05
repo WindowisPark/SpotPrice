@@ -90,23 +90,7 @@ public class Offer {
 
     // --- 상태 전이 메서드 ---
 
-    /**
-     * TODO: sell() 구현
-     *
-     * ### 검증
-     * - 현재 상태가 OPEN인지 확인
-     * - SOLD, EXPIRED 상태에서 호출 시 예외 (어떤 예외? OfferNotOpenException?)
-     *
-     * ### 상태 변경
-     * - status = SOLD
-     *
-     * ### 이벤트 등록
-     * - events.register(new OfferSoldEvent(...))
-     *
-     * ### 엣지 케이스
-     * - 만료 시간(expireAt) 지났는데 sell() 호출하면? 허용? 거부?
-     * - 동시에 두 명이 구매 시도하면? (애플리케이션 레이어에서 동시성 제어)
-     */
+
     public void sell() {
         sell(Instant.now());
     }

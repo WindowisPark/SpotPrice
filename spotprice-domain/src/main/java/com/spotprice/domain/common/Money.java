@@ -77,6 +77,10 @@ public record Money(BigDecimal amount) {
     }
 
     public Money subtract(Money other) {
+        if (other.isGreaterThan(this)) {
+            throw new IllegalArgumentException(
+                    "차감 금액이 보유 금액보다 큽니다: " + this.amount + " - " + other.amount);
+        }
         return new Money(this.amount.subtract(other.amount));
     }
 
