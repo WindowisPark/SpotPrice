@@ -1,3 +1,14 @@
 spring:
   application:
     name: spotprice-api
+  datasource:
+    url: jdbc:h2:mem:spotprice
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    defer-datasource-initialization: true
+  h2:
+    console:
+      enabled: true

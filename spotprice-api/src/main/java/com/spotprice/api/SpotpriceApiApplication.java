@@ -3,7 +3,7 @@ package com.spotprice.api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.spotprice")
 public class SpotpriceApiApplication {
 
 	public static void main(String[] args) {

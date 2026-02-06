@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    implementation project(':spotprice-domain')
     implementation project(':spotprice-application')
     implementation project(':spotprice-infrastructure')
 

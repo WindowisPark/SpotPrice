@@ -27,6 +27,9 @@ public class Offer {
     // DomainEvents 필드 추가 (컴포지션)
     private final DomainEvents events = new DomainEvents();
 
+    /**
+     * 새 Offer 생성 — 불변식 검증 수행
+     */
     public Offer(Money basePrice, Money minPrice, DecayType decayType,
                  Instant startAt, Instant endAt, Instant expireAt) {
 
@@ -52,6 +55,28 @@ public class Offer {
         this.endAt = endAt;
         this.expireAt = expireAt;
         this.status = OfferStatus.OPEN;
+    }
+
+    /**
+     * DB 복원용 팩토리 — 이미 검증된 데이터이므로 불변식 검증을 건너뜀
+     */
+    public static Offer restore(Long id, OfferStatus status, DecayType decayType,
+                                Money basePrice, Money minPrice,
+                                Instant startAt, Instant endAt, Instant expireAt) {
+        Offer offer = new Offer();
+        offer.id = id;
+        offer.status = status;
+        offer.decayType = decayType;
+        offer.basePrice = basePrice;
+        offer.minPrice = minPrice;
+        offer.startAt = startAt;
+        offer.endAt = endAt;
+        offer.expireAt = expireAt;
+        return offer;
+    }
+
+    private Offer() {
+        // restore 전용
     }
 
     // --- Getters (PriceCalculator에서 사용) ---
