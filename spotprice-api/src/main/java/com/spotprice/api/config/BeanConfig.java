@@ -4,8 +4,10 @@ import com.spotprice.application.port.out.ClockPort;
 import com.spotprice.application.port.out.LockManagerPort;
 import com.spotprice.application.port.out.OfferRepositoryPort;
 import com.spotprice.application.port.out.OrderRepositoryPort;
+import com.spotprice.application.port.out.PaymentPort;
 import com.spotprice.application.service.OfferQuoteService;
 import com.spotprice.application.service.OrderService;
+import com.spotprice.application.service.PaymentService;
 import com.spotprice.domain.offer.PriceCalculator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,5 +34,11 @@ public class BeanConfig {
                                      ClockPort clock,
                                      PriceCalculator priceCalculator) {
         return new OrderService(offerRepository, orderRepository, lockManager, clock, priceCalculator);
+    }
+
+    @Bean
+    public PaymentService paymentService(OrderRepositoryPort orderRepository,
+                                         PaymentPort paymentPort) {
+        return new PaymentService(orderRepository, paymentPort);
     }
 }
