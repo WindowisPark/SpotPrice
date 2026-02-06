@@ -1,14 +1,19 @@
 package com.spotprice.api.config;
 
+import com.spotprice.application.port.in.IssueAccessGrantUseCase;
+import com.spotprice.application.port.out.AccessGrantRepositoryPort;
 import com.spotprice.application.port.out.ClockPort;
+import com.spotprice.application.port.out.EventPublisherPort;
 import com.spotprice.application.port.out.LockManagerPort;
 import com.spotprice.application.port.out.OfferRepositoryPort;
 import com.spotprice.application.port.out.OrderRepositoryPort;
 import com.spotprice.application.port.out.PaymentPort;
+import com.spotprice.application.service.AccessGrantService;
 import com.spotprice.application.service.OfferQuoteService;
 import com.spotprice.application.service.OrderService;
 import com.spotprice.application.service.PaymentService;
 import com.spotprice.domain.offer.PriceCalculator;
+import com.spotprice.infra.event.OrderPaidEventListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -38,7 +43,20 @@ public class BeanConfig {
 
     @Bean
     public PaymentService paymentService(OrderRepositoryPort orderRepository,
-                                         PaymentPort paymentPort) {
-        return new PaymentService(orderRepository, paymentPort);
+                                         PaymentPort paymentPort,
+                                         EventPublisherPort eventPublisher) {
+        return new PaymentService(orderRepository, paymentPort, eventPublisher);
+    }
+
+    @Bean
+    public AccessGrantService accessGrantService(OrderRepositoryPort orderRepository,
+                                                  OfferRepositoryPort offerRepository,
+                                                  AccessGrantRepositoryPort accessGrantRepository) {
+        return new AccessGrantService(orderRepository, offerRepository, accessGrantRepository);
+    }
+
+    @Bean
+    public OrderPaidEventListener orderPaidEventListener(IssueAccessGrantUseCase issueAccessGrantUseCase) {
+        return new OrderPaidEventListener(issueAccessGrantUseCase);
     }
 }

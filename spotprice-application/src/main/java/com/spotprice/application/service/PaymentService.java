@@ -1,7 +1,9 @@
 package com.spotprice.application.service;
 
+import com.spotprice.application.dto.event.OrderPaidEvent;
 import com.spotprice.application.dto.result.PaymentStatusResult;
 import com.spotprice.application.port.in.PayOrderUseCase;
+import com.spotprice.application.port.out.EventPublisherPort;
 import com.spotprice.application.port.out.OrderRepositoryPort;
 import com.spotprice.application.port.out.PaymentPort;
 import com.spotprice.application.port.out.PaymentPort.PaymentResult;
@@ -9,16 +11,21 @@ import com.spotprice.domain.order.Order;
 import com.spotprice.domain.order.OrderStatus;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.NoSuchElementException;
 
 public class PaymentService implements PayOrderUseCase {
 
     private final OrderRepositoryPort orderRepository;
     private final PaymentPort paymentPort;
+    private final EventPublisherPort eventPublisher;
 
-    public PaymentService(OrderRepositoryPort orderRepository, PaymentPort paymentPort) {
+    public PaymentService(OrderRepositoryPort orderRepository,
+                          PaymentPort paymentPort,
+                          EventPublisherPort eventPublisher) {
         this.orderRepository = orderRepository;
         this.paymentPort = paymentPort;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -39,6 +46,10 @@ public class PaymentService implements PayOrderUseCase {
             order.markFailed();
         }
         orderRepository.save(order);
+
+        if (result.success()) {
+            eventPublisher.publish(new OrderPaidEvent(orderId, Instant.now()));
+        }
 
         return new PaymentStatusResult(
                 orderId,
