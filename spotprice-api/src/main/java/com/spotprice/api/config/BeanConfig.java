@@ -9,6 +9,7 @@ import com.spotprice.application.port.out.OfferRepositoryPort;
 import com.spotprice.application.port.out.OrderRepositoryPort;
 import com.spotprice.application.port.out.PaymentPort;
 import com.spotprice.application.service.AccessGrantService;
+import com.spotprice.application.service.OfferListService;
 import com.spotprice.application.service.OfferQuoteService;
 import com.spotprice.application.service.OrderService;
 import com.spotprice.application.service.PaymentService;
@@ -30,6 +31,13 @@ public class BeanConfig {
                                                ClockPort clock,
                                                PriceCalculator priceCalculator) {
         return new OfferQuoteService(offerRepository, clock, priceCalculator);
+    }
+
+    @Bean
+    public OfferListService offerListService(OfferRepositoryPort offerRepository,
+                                             ClockPort clock,
+                                             PriceCalculator priceCalculator) {
+        return new OfferListService(offerRepository, clock, priceCalculator);
     }
 
     @Bean
