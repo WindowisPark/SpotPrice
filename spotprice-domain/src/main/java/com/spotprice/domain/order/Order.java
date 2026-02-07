@@ -6,6 +6,7 @@ import java.time.Instant;
 public class Order {
 
     private Long id;
+    private Long userId;
     private Long offerId;
     private OrderStatus status;
     private BigDecimal lockedPrice;
@@ -15,7 +16,11 @@ public class Order {
     /**
      * 새 주문 생성 — PENDING 상태로 시작
      */
-    public Order(Long offerId, BigDecimal lockedPrice, IdempotencyKey idempotencyKey, Instant createdAt) {
+    public Order(Long userId, Long offerId, BigDecimal lockedPrice,
+                 IdempotencyKey idempotencyKey, Instant createdAt) {
+        if (userId == null) {
+            throw new IllegalArgumentException("userId는 필수입니다.");
+        }
         if (offerId == null) {
             throw new IllegalArgumentException("offerId는 필수입니다.");
         }
@@ -26,6 +31,7 @@ public class Order {
             throw new IllegalArgumentException("멱등성 키는 필수입니다.");
         }
 
+        this.userId = userId;
         this.offerId = offerId;
         this.lockedPrice = lockedPrice;
         this.idempotencyKey = idempotencyKey;
@@ -36,11 +42,12 @@ public class Order {
     /**
      * DB 복원용 팩토리
      */
-    public static Order restore(Long id, Long offerId, OrderStatus status,
+    public static Order restore(Long id, Long userId, Long offerId, OrderStatus status,
                                 BigDecimal lockedPrice, IdempotencyKey idempotencyKey,
                                 Instant createdAt) {
         Order order = new Order();
         order.id = id;
+        order.userId = userId;
         order.offerId = offerId;
         order.status = status;
         order.lockedPrice = lockedPrice;
@@ -79,6 +86,7 @@ public class Order {
     // --- Getters ---
 
     public Long getId() { return id; }
+    public Long getUserId() { return userId; }
     public Long getOfferId() { return offerId; }
     public OrderStatus getStatus() { return status; }
     public BigDecimal getLockedPrice() { return lockedPrice; }

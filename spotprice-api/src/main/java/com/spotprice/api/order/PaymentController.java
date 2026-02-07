@@ -4,6 +4,7 @@ import com.spotprice.api.dto.ApiResponse;
 import com.spotprice.application.dto.result.PaymentStatusResult;
 import com.spotprice.application.port.in.PayOrderUseCase;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,10 @@ public class PaymentController {
     }
 
     @PostMapping("/{orderId}/pay")
-    public ResponseEntity<ApiResponse<PaymentStatusResult>> pay(@PathVariable Long orderId) {
-        PaymentStatusResult result = payOrderUseCase.pay(orderId);
+    public ResponseEntity<ApiResponse<PaymentStatusResult>> pay(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long orderId) {
+        PaymentStatusResult result = payOrderUseCase.pay(userId, orderId);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 }

@@ -14,6 +14,9 @@ public class OrderEntity {
     private Long id;
 
     @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false)
     private Long offerId;
 
     @Column(nullable = false)
@@ -22,7 +25,7 @@ public class OrderEntity {
     @Column(nullable = false)
     private BigDecimal lockedPrice;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String idempotencyKey;
 
     @Column(nullable = false)
@@ -31,10 +34,11 @@ public class OrderEntity {
     protected OrderEntity() {
     }
 
-    public OrderEntity(Long id, Long offerId, String status,
+    public OrderEntity(Long id, Long userId, Long offerId, String status,
                        BigDecimal lockedPrice, String idempotencyKey,
                        Instant createdAt) {
         this.id = id;
+        this.userId = userId;
         this.offerId = offerId;
         this.status = status;
         this.lockedPrice = lockedPrice;
@@ -43,6 +47,7 @@ public class OrderEntity {
     }
 
     public Long getId() { return id; }
+    public Long getUserId() { return userId; }
     public Long getOfferId() { return offerId; }
     public String getStatus() { return status; }
     public BigDecimal getLockedPrice() { return lockedPrice; }

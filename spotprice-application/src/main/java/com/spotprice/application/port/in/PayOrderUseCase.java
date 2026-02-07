@@ -4,5 +4,5 @@ import com.spotprice.application.dto.result.PaymentStatusResult;
 
 public interface PayOrderUseCase {
 
-    PaymentStatusResult pay(Long orderId);
+    PaymentStatusResult pay(Long userId, Long orderId);
 }

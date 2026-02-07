@@ -7,10 +7,14 @@ import com.spotprice.application.port.out.EventPublisherPort;
 import com.spotprice.application.port.out.LockManagerPort;
 import com.spotprice.application.port.out.OfferRepositoryPort;
 import com.spotprice.application.port.out.OrderRepositoryPort;
+import com.spotprice.application.port.out.PasswordEncoderPort;
 import com.spotprice.application.port.out.PaymentPort;
+import com.spotprice.application.port.out.UserRepositoryPort;
 import com.spotprice.application.service.AccessGrantService;
+import com.spotprice.application.service.AuthService;
 import com.spotprice.application.service.OfferListService;
 import com.spotprice.application.service.OfferQuoteService;
+import com.spotprice.application.service.OrderQueryService;
 import com.spotprice.application.service.OrderService;
 import com.spotprice.application.service.PaymentService;
 import com.spotprice.domain.offer.PriceCalculator;
@@ -41,6 +45,13 @@ public class BeanConfig {
     }
 
     @Bean
+    public AuthService authService(UserRepositoryPort userRepository,
+                                   PasswordEncoderPort passwordEncoder,
+                                   ClockPort clock) {
+        return new AuthService(userRepository, passwordEncoder, clock);
+    }
+
+    @Bean
     public OrderService orderService(OfferRepositoryPort offerRepository,
                                      OrderRepositoryPort orderRepository,
                                      LockManagerPort lockManager,
@@ -61,6 +72,11 @@ public class BeanConfig {
                                                   OfferRepositoryPort offerRepository,
                                                   AccessGrantRepositoryPort accessGrantRepository) {
         return new AccessGrantService(orderRepository, offerRepository, accessGrantRepository);
+    }
+
+    @Bean
+    public OrderQueryService orderQueryService(OrderRepositoryPort orderRepository) {
+        return new OrderQueryService(orderRepository);
     }
 
     @Bean

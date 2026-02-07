@@ -6,6 +6,7 @@ import com.spotprice.application.dto.result.OrderResult;
 import com.spotprice.application.port.in.CreateOrderUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +23,11 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<OrderResult>> createOrder(@RequestBody CreateOrderRequest request) {
+    public ResponseEntity<ApiResponse<OrderResult>> createOrder(
+            @AuthenticationPrincipal Long userId,
+            @RequestBody CreateOrderRequest request) {
         CreateOrderCommand command = new CreateOrderCommand(
+                userId,
                 request.offerId(),
                 request.expectedPrice(),
                 request.idempotencyKey()

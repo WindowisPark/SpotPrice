@@ -31,8 +31,8 @@ public class PaymentService implements PayOrderUseCase {
 
     @Override
     @Transactional
-    public PaymentStatusResult pay(Long orderId) {
-        Order order = orderRepository.findById(orderId)
+    public PaymentStatusResult pay(Long userId, Long orderId) {
+        Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         if (order.getStatus() != OrderStatus.PENDING) {

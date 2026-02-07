@@ -12,6 +12,7 @@ public class OrderMapper {
     public static Order toDomain(OrderEntity entity) {
         return Order.restore(
                 entity.getId(),
+                entity.getUserId(),
                 entity.getOfferId(),
                 OrderStatus.valueOf(entity.getStatus()),
                 entity.getLockedPrice(),
@@ -23,6 +24,7 @@ public class OrderMapper {
     public static OrderEntity toEntity(Order order) {
         return new OrderEntity(
                 order.getId(),
+                order.getUserId(),
                 order.getOfferId(),
                 order.getStatus().name(),
                 order.getLockedPrice(),

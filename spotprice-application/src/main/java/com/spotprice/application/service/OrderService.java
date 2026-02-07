@@ -81,7 +81,7 @@ public class OrderService implements CreateOrderUseCase {
             offerRepository.save(offer);
 
             // 7. 주문 생성
-            Order order = new Order(offer.getId(), serverPrice.amount(), key, now);
+            Order order = new Order(command.userId(), offer.getId(), serverPrice.amount(), key, now);
             Order saved = orderRepository.save(order);
 
             return toResult(saved);

@@ -44,6 +44,16 @@ public class GlobalExceptionHandler {
         return toResponse(ErrorCode.INVALID_ORDER_STATUS);
     }
 
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<Void>> handleEmailExists(EmailAlreadyExistsException ex) {
+        return toResponse(ErrorCode.EMAIL_ALREADY_EXISTS);
+    }
+
+    @ExceptionHandler(AuthenticationFailedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAuthFailed(AuthenticationFailedException ex) {
+        return toResponse(ErrorCode.AUTHENTICATION_FAILED);
+    }
+
     private ResponseEntity<ApiResponse<Void>> toResponse(ErrorCode code) {
         return ResponseEntity.status(code.getHttpStatus()).body(ApiResponse.error(code));
     }
