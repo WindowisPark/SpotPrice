@@ -1,5 +1,6 @@
 package com.spotprice.api.order;
 
+import com.spotprice.api.dto.ApiResponse;
 import com.spotprice.application.dto.result.PaymentStatusResult;
 import com.spotprice.application.port.in.PayOrderUseCase;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class PaymentController {
     }
 
     @PostMapping("/{orderId}/pay")
-    public ResponseEntity<PaymentStatusResult> pay(@PathVariable Long orderId) {
+    public ResponseEntity<ApiResponse<PaymentStatusResult>> pay(@PathVariable Long orderId) {
         PaymentStatusResult result = payOrderUseCase.pay(orderId);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 }

@@ -4,7 +4,14 @@ import java.math.BigDecimal;
 
 public class PriceMismatchException extends DomainException {
 
-    public PriceMismatchException(BigDecimal expected, BigDecimal actual) {
-        super("Price mismatch: expected " + expected + ", actual " + actual);
+    private final BigDecimal serverPrice;
+
+    public PriceMismatchException(BigDecimal clientPrice, BigDecimal serverPrice) {
+        super("Price mismatch: client " + clientPrice + ", server " + serverPrice);
+        this.serverPrice = serverPrice;
+    }
+
+    public BigDecimal getServerPrice() {
+        return serverPrice;
     }
 }

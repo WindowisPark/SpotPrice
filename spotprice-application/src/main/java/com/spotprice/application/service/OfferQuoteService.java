@@ -6,6 +6,7 @@ import com.spotprice.application.port.out.ClockPort;
 import com.spotprice.application.port.out.OfferRepositoryPort;
 import com.spotprice.domain.common.Money;
 import com.spotprice.domain.exception.OfferExpiredException;
+import com.spotprice.domain.exception.OfferNotFoundException;
 import com.spotprice.domain.exception.OfferNotOpenException;
 import com.spotprice.domain.offer.Offer;
 import com.spotprice.domain.offer.OfferStatus;
@@ -13,7 +14,6 @@ import com.spotprice.domain.offer.PriceCalculator;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.NoSuchElementException;
 
 public class OfferQuoteService implements GetOfferQuoteUseCase {
 
@@ -32,7 +32,7 @@ public class OfferQuoteService implements GetOfferQuoteUseCase {
     @Transactional(readOnly = true)
     public OfferQuoteResult getQuote(Long offerId) {
         Offer offer = offerRepository.findById(offerId)
-                .orElseThrow(() -> new NoSuchElementException("Offer not found: " + offerId));
+                .orElseThrow(() -> new OfferNotFoundException(offerId));
 
         if (offer.getStatus() != OfferStatus.OPEN) {
             throw new OfferNotOpenException(offerId);

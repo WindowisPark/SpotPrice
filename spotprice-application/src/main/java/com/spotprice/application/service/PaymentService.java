@@ -7,12 +7,13 @@ import com.spotprice.application.port.out.EventPublisherPort;
 import com.spotprice.application.port.out.OrderRepositoryPort;
 import com.spotprice.application.port.out.PaymentPort;
 import com.spotprice.application.port.out.PaymentPort.PaymentResult;
+import com.spotprice.domain.exception.InvalidOrderStatusException;
+import com.spotprice.domain.exception.OrderNotFoundException;
 import com.spotprice.domain.order.Order;
 import com.spotprice.domain.order.OrderStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.NoSuchElementException;
 
 public class PaymentService implements PayOrderUseCase {
 
@@ -32,10 +33,10 @@ public class PaymentService implements PayOrderUseCase {
     @Transactional
     public PaymentStatusResult pay(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NoSuchElementException("Order not found: " + orderId));
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         if (order.getStatus() != OrderStatus.PENDING) {
-            throw new IllegalStateException("결제 가능한 상태가 아닙니다. status=" + order.getStatus());
+            throw new InvalidOrderStatusException(order.getStatus().name());
         }
 
         PaymentResult result = paymentPort.process(orderId, order.getLockedPrice());

@@ -7,11 +7,12 @@ import com.spotprice.application.port.out.OfferRepositoryPort;
 import com.spotprice.application.port.out.OrderRepositoryPort;
 import com.spotprice.domain.access.AccessGrant;
 import com.spotprice.domain.access.GrantType;
+import com.spotprice.domain.exception.OfferNotFoundException;
+import com.spotprice.domain.exception.OrderNotFoundException;
 import com.spotprice.domain.offer.Offer;
 import com.spotprice.domain.order.Order;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -40,11 +41,11 @@ public class AccessGrantService implements IssueAccessGrantUseCase {
 
         // Order → offerId 조회
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NoSuchElementException("Order not found: " + orderId));
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         // Offer → validFrom/validTo (start_at/end_at) 조회
         Offer offer = offerRepository.findById(order.getOfferId())
-                .orElseThrow(() -> new NoSuchElementException("Offer not found: " + order.getOfferId()));
+                .orElseThrow(() -> new OfferNotFoundException(order.getOfferId()));
 
         // PIN 생성 및 AccessGrant 생성
         String pin = generatePin();

@@ -1,5 +1,6 @@
 package com.spotprice.api.offer;
 
+import com.spotprice.api.dto.ApiResponse;
 import com.spotprice.application.dto.result.OfferQuoteResult;
 import com.spotprice.application.port.in.GetOfferQuoteUseCase;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class OfferQuoteController {
     }
 
     @GetMapping("/{offerId}/quote")
-    public ResponseEntity<OfferQuoteResult> getQuote(@PathVariable Long offerId) {
+    public ResponseEntity<ApiResponse<OfferQuoteResult>> getQuote(@PathVariable Long offerId) {
         OfferQuoteResult result = getOfferQuoteUseCase.getQuote(offerId);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 }

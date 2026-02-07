@@ -9,6 +9,7 @@ import com.spotprice.application.port.out.OfferRepositoryPort;
 import com.spotprice.application.port.out.OrderRepositoryPort;
 import com.spotprice.domain.common.Money;
 import com.spotprice.domain.exception.OfferExpiredException;
+import com.spotprice.domain.exception.OfferNotFoundException;
 import com.spotprice.domain.exception.OfferNotOpenException;
 import com.spotprice.domain.exception.PriceMismatchException;
 import com.spotprice.domain.offer.Offer;
@@ -18,9 +19,7 @@ import com.spotprice.domain.order.IdempotencyKey;
 import com.spotprice.domain.order.Order;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class OrderService implements CreateOrderUseCase {
@@ -60,7 +59,7 @@ public class OrderService implements CreateOrderUseCase {
 
             // 3. Offer 조회 (비관적 락)
             Offer offer = offerRepository.findByIdForUpdate(command.offerId())
-                    .orElseThrow(() -> new NoSuchElementException("Offer not found: " + command.offerId()));
+                    .orElseThrow(() -> new OfferNotFoundException(command.offerId()));
 
             // 4. Offer 상태 검증
             if (offer.getStatus() != OfferStatus.OPEN) {

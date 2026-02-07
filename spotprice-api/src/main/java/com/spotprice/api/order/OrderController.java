@@ -1,5 +1,6 @@
 package com.spotprice.api.order;
 
+import com.spotprice.api.dto.ApiResponse;
 import com.spotprice.application.dto.command.CreateOrderCommand;
 import com.spotprice.application.dto.result.OrderResult;
 import com.spotprice.application.port.in.CreateOrderUseCase;
@@ -21,7 +22,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResult> createOrder(@RequestBody CreateOrderRequest request) {
+    public ResponseEntity<ApiResponse<OrderResult>> createOrder(@RequestBody CreateOrderRequest request) {
         CreateOrderCommand command = new CreateOrderCommand(
                 request.offerId(),
                 request.expectedPrice(),
@@ -29,6 +30,6 @@ public class OrderController {
         );
 
         OrderResult result = createOrderUseCase.createOrder(command);
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(result));
     }
 }
