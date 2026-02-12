@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('결제 결과 - SpotPrice')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+<main class="container">
+    <article>
+        <header><h2>결제 완료</h2></header>
+
+        <table>
+            <tr><th>주문 번호</th><td th:text="'#' + ${order.orderId}"></td></tr>
+            <tr><th>결제 금액</th><td class="price" th:text="'₩' + ${#numbers.formatInteger(order.lockedPrice, 1, 'COMMA')}"></td></tr>
+        </table>
+
+        <article style="background: var(--pico-card-background-color); text-align: center;">
+            <h3>접근 정보</h3>
+            <p>타입: <strong th:text="${grant.grantType}"></strong></p>
+            <p class="price" style="font-size: 2.5rem; letter-spacing: 0.3em;"
+               th:text="${grant.grantValue}">123456</p>
+            <p class="price-sub">
+                유효 기간: <span th:text="${#temporals.format(grant.validFrom, 'yyyy-MM-dd HH:mm')}"></span>
+                ~ <span th:text="${#temporals.format(grant.validTo, 'yyyy-MM-dd HH:mm')}"></span>
+            </p>
+        </article>
+    </article>
+
+    <a href="/my/orders">&larr; 내 주문 목록</a>
+</main>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('오류 - SpotPrice')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+<main class="container">
+    <article>
+        <header><h2>오류가 발생했습니다</h2></header>
+        <p th:text="${message != null ? message : '요청을 처리할 수 없습니다.'}"></p>
+        <p class="price-sub" th:if="${status}" th:text="'HTTP ' + ${status}"></p>
+        <footer>
+            <a href="/" role="button">홈으로</a>
+        </footer>
+    </article>
+</main>
+</body>
+</html>

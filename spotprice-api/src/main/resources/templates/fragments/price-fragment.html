@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="content">
+    <p class="price">현재가: ₩<span th:text="${#numbers.formatInteger(quote.currentPrice, 1, 'COMMA')}"></span></p>
+    <p class="price-sub">
+        만료: <span th:text="${#temporals.format(quote.expiresAt, 'yyyy-MM-dd HH:mm')}"></span>
+        | 조회 시각: <span th:text="${#temporals.format(quote.quotedAt, 'HH:mm:ss')}"></span>
+    </p>
+</div>
+</html>

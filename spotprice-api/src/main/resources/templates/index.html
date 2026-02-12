@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('SpotPrice - Offer 목록')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+<main class="container">
+    <h1>판매 중인 Offer</h1>
+
+    <div th:if="${offers.content.empty}">
+        <p>현재 판매 중인 Offer가 없습니다.</p>
+    </div>
+
+    <div class="grid" th:if="${!offers.content.empty}">
+        <article th:each="offer : ${offers.content}">
+            <header>
+                <span class="badge badge-open">OPEN</span>
+                Offer #<span th:text="${offer.offerId}"></span>
+            </header>
+            <p class="price" th:text="'₩' + ${#numbers.formatInteger(offer.currentPrice, 1, 'COMMA')}">₩75,000</p>
+            <p class="price-sub">
+                시작가 ₩<span th:text="${#numbers.formatInteger(offer.basePrice, 1, 'COMMA')}"></span>
+                / 최저가 ₩<span th:text="${#numbers.formatInteger(offer.minPrice, 1, 'COMMA')}"></span>
+            </p>
+            <footer>
+                <a th:href="@{/offers/{id}(id=${offer.offerId})}" role="button">상세 보기</a>
+            </footer>
+        </article>
+    </div>
+</main>
+</body>
+</html>

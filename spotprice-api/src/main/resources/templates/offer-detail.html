@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Offer 상세 - SpotPrice')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+<main class="container">
+    <article>
+        <header>
+            <h2>Offer #<span th:text="${quote.offerId}"></span></h2>
+        </header>
+
+        <div id="price-area"
+             hx-get th:hx-get="@{/offers/{id}/price-fragment(id=${quote.offerId})}"
+             hx-trigger="every 3s"
+             hx-swap="innerHTML">
+            <div th:replace="~{fragments/price-fragment :: content}"></div>
+        </div>
+
+        <footer>
+            <form method="post" action="/orders">
+                <input type="hidden" name="offerId" th:value="${quote.offerId}">
+                <input type="hidden" name="expectedPrice" th:value="${quote.currentPrice}">
+                <button type="submit">주문하기</button>
+            </form>
+        </footer>
+    </article>
+
+    <a href="/">&larr; 목록으로</a>
+</main>
+</body>
+</html>

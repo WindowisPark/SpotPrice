@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('회원가입 - SpotPrice')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+<main class="container">
+    <article style="max-width: 400px; margin: 0 auto;">
+        <header><h2>회원가입</h2></header>
+        <div th:if="${error}" role="alert" style="color: var(--pico-del-color);">
+            <small th:text="${error}"></small>
+        </div>
+        <form method="post" action="/register">
+            <label for="email">이메일</label>
+            <input type="email" id="email" name="email" required>
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" required minlength="4">
+            <button type="submit">회원가입</button>
+        </form>
+        <p><small>이미 계정이 있으신가요? <a href="/login">로그인</a></small></p>
+    </article>
+</main>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('주문 확인 - SpotPrice')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+<main class="container">
+    <article>
+        <header><h2>주문 확인</h2></header>
+
+        <div th:if="${error}" role="alert" style="color: var(--pico-del-color);">
+            <small th:text="${error}"></small>
+        </div>
+
+        <table>
+            <tr><th>주문 번호</th><td th:text="'#' + ${order.orderId}"></td></tr>
+            <tr><th>Offer</th><td><a th:href="@{/offers/{id}(id=${order.offerId})}" th:text="'#' + ${order.offerId}"></a></td></tr>
+            <tr><th>확정 가격</th><td class="price" th:text="'₩' + ${#numbers.formatInteger(order.lockedPrice, 1, 'COMMA')}"></td></tr>
+            <tr>
+                <th>상태</th>
+                <td>
+                    <span class="badge badge-pending" th:if="${order.status == 'PENDING'}">PENDING</span>
+                    <span class="badge badge-paid" th:if="${order.status == 'PAID'}">PAID</span>
+                    <span class="badge badge-failed" th:if="${order.status == 'FAILED'}">FAILED</span>
+                </td>
+            </tr>
+        </table>
+
+        <footer th:if="${order.status == 'PENDING'}">
+            <form method="post" th:action="@{/orders/{id}/pay(id=${order.orderId})}">
+                <button type="submit">결제하기</button>
+            </form>
+        </footer>
+
+        <footer th:if="${order.status == 'PAID'}">
+            <a th:href="@{/orders/{id}/result(id=${order.orderId})}" role="button">결제 결과 보기</a>
+        </footer>
+    </article>
+
+    <a href="/my/orders">&larr; 내 주문 목록</a>
+</main>
+</body>
+</html>

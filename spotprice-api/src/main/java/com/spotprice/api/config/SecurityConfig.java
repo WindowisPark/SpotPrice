@@ -41,25 +41,39 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // API
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
                         .requestMatchers("/api/offers/**").permitAll()
-                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/orders/**", "/api/auth/logout").authenticated()
+                        // Web UI
+                        .requestMatchers("/", "/offers/**", "/login", "/register").permitAll()
+                        // Infra
+                        .requestMatchers("/h2-console/**").permitAll()
+                        // 인증 필요
+                        .requestMatchers("/orders/**", "/my/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                            ApiResponse<Void> body = ApiResponse.error(ErrorCode.UNAUTHORIZED);
-                            response.getWriter().write(objectMapper.writeValueAsString(body));
+                            if (request.getRequestURI().startsWith("/api/")) {
+                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                                ApiResponse<Void> body = ApiResponse.error(ErrorCode.UNAUTHORIZED);
+                                response.getWriter().write(objectMapper.writeValueAsString(body));
+                            } else {
+                                response.sendRedirect("/login");
+                            }
                         })
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                            ApiResponse<Void> body = ApiResponse.error(ErrorCode.FORBIDDEN);
-                            response.getWriter().write(objectMapper.writeValueAsString(body));
+                            if (request.getRequestURI().startsWith("/api/")) {
+                                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                                ApiResponse<Void> body = ApiResponse.error(ErrorCode.FORBIDDEN);
+                                response.getWriter().write(objectMapper.writeValueAsString(body));
+                            } else {
+                                response.sendRedirect("/login");
+                            }
                         })
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),

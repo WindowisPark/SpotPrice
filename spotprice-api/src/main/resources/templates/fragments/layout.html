@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Head fragment -->
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title}">SpotPrice</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <style>
+        .price { font-size: 1.5rem; font-weight: bold; }
+        .price-sub { color: var(--pico-muted-color); }
+        .badge {
+            display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px;
+            font-size: 0.8rem; font-weight: bold;
+        }
+        .badge-open { background: var(--pico-primary-background); color: var(--pico-primary-inverse); }
+        .badge-pending { background: #f0ad4e; color: #fff; }
+        .badge-paid { background: #5cb85c; color: #fff; }
+        .badge-failed { background: #d9534f; color: #fff; }
+    </style>
+</head>
+
+<!-- Nav fragment -->
+<nav th:fragment="nav" class="container">
+    <ul>
+        <li><a href="/"><strong>SpotPrice</strong></a></li>
+    </ul>
+    <ul>
+        <li><a href="/my/orders">내 주문</a></li>
+        <li th:if="${#authentication != null and #authentication.principal != 'anonymousUser'}">
+            <a href="/logout">로그아웃</a>
+        </li>
+        <li th:if="${#authentication == null or #authentication.principal == 'anonymousUser'}">
+            <a href="/login">로그인</a>
+        </li>
+    </ul>
+</nav>
+
+</html>

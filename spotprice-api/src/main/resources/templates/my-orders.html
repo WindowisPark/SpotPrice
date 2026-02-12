@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('내 주문 - SpotPrice')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+<main class="container">
+    <h1>내 주문</h1>
+
+    <div th:if="${orders.content.empty}">
+        <p>주문 내역이 없습니다. <a href="/">Offer 둘러보기</a></p>
+    </div>
+
+    <table th:if="${!orders.content.empty}">
+        <thead>
+        <tr>
+            <th>주문 번호</th>
+            <th>Offer</th>
+            <th>금액</th>
+            <th>상태</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders.content}">
+            <td th:text="'#' + ${order.orderId}"></td>
+            <td th:text="'#' + ${order.offerId}"></td>
+            <td th:text="'₩' + ${#numbers.formatInteger(order.lockedPrice, 1, 'COMMA')}"></td>
+            <td>
+                <span class="badge badge-pending" th:if="${order.status == 'PENDING'}">PENDING</span>
+                <span class="badge badge-paid" th:if="${order.status == 'PAID'}">PAID</span>
+                <span class="badge badge-failed" th:if="${order.status == 'FAILED'}">FAILED</span>
+            </td>
+            <td><a th:href="@{/orders/{id}(id=${order.orderId})}">상세</a></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>
