@@ -37,43 +37,21 @@ Offer 조회(Quote) → 주문 생성(CreateOrder) → 결제(PayOrder) → 접�
 
 ---
 
-## v1.5 — Thymeleaf Web UI
+## v1.5 — Thymeleaf Web UI ✅ 완료
 
-백엔드 기능을 브라우저에서 직접 확인/테스트할 수 있는 서버 렌더링 UI.
-**목적**: API 동작 검증, 전체 플로우 시각적 확인, v2 프론트엔드 분리 전 프로토타입.
-
-### 구성
-
-```
-spotprice-api/
-└─ src/main/
-   ├─ java/.../web/          # Thymeleaf Controller (API Controller와 분리)
-   └─ resources/
-      ├─ templates/           # .html
-      └─ static/              # CSS, JS
-```
-
-### 페이지 목록
+Pico CSS + htmx 기반 서버 렌더링 UI. 커밋 `c43d01a`.
 
 | 페이지 | URL | 설명 |
 |--------|-----|------|
-| Offer 목록 | `/` | OPEN 상태 Offer 목록, 실시간 가격 표시 |
-| Offer 상세 | `/offers/{id}` | 가격 변동 시각화, 주문 버튼 |
+| Offer 목록 | `/` | OPEN 상태 카드 목록, 현재가 표시 |
+| Offer 상세 | `/offers/{id}` | htmx 3초 가격 자동 갱신, 주문 버튼 |
 | 주문 확인 | `/orders/{id}` | 주문 정보 + 결제 버튼 |
-| 결제 결과 | `/orders/{id}/result` | 성공 시 AccessGrant(PIN/QR) 표시 |
-| 내 주문 | `/my/orders` | 주문 이력 |
+| 결제 결과 | `/orders/{id}/result` | AccessGrant PIN 표시 |
+| 내 주문 | `/my/orders` | 주문 이력 테이블 |
+| 로그인/회원가입 | `/login`, `/register` | 폼 기반 인증 |
 
-### 기술 선택
-
-- **Thymeleaf**: Spring Boot 기본 내장, 추가 빌드 도구 불필요
-- **htmx (선택)**: 페이지 전환 없이 가격 갱신 등 부분 업데이트
-- **CSS**: 최소한의 스타일 (classless CSS 또는 Pico CSS)
-
-### 고려사항
-
-- Thymeleaf Controller는 기존 UseCase를 직접 호출 (API Controller와 동일 서비스 레이어 사용)
-- 인증은 v1 §9에서 구현 완료 — JWT Cookie 기반 로그인/회원가입 활용
-- v2에서 프론트엔드 분리 시 Thymeleaf는 제거하고 API만 남김
+**기술**: Thymeleaf + Pico CSS (CDN) + htmx (CDN)
+**보안**: SecurityConfig 스마트 EntryPoint (API→JSON 401, Web→/login 리다이렉트)
 
 ---
 
@@ -108,7 +86,7 @@ spotprice-api/
 
 ```
 v1 ✅ 완료
-  → v1.5 Thymeleaf UI
+  → v1.5 Thymeleaf UI ✅ 완료
     → v2 User 확장 + Offer 관리
       → v2 PG 연동
 ```
