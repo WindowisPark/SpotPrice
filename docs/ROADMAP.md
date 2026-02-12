@@ -27,10 +27,13 @@ Offer 조회(Quote) → 주문 생성(CreateOrder) → 결제(PayOrder) → 접�
 | Offer 만료 처리 | §7 | `7bb900f` | 목록 조회 DB 필터링, PageQuery/PageResult 페이지네이션 |
 | 보안 | §9 | `927306d` | User 도메인, JWT Cookie 인증, Order userId/조회, 401/403 분리 |
 
-### v1 잔여 작업
+### 구현 완료 (v1 마무리)
 
-#### 1. 감사 로그 (§10)
-- [ ] 이벤트 로깅: OFFER_VIEW, PAY_ATTEMPT, PAY_SUCCESS, PAY_FAIL, OFFER_SOLD
+| 항목 | 정책 섹션 | 내용 |
+|------|----------|------|
+| 감사 로그 | §10 | AuditLogPort, AuditLogAdapter(REQUIRES_NEW), 5종 이벤트 DB 기록 |
+
+> **v1 전체 구현 완료**
 
 ---
 
@@ -104,7 +107,7 @@ spotprice-api/
 ## 우선순위 제안
 
 ```
-v1 잔여 (감사 로그)
+v1 ✅ 완료
   → v1.5 Thymeleaf UI
     → v2 User 확장 + Offer 관리
       → v2 PG 연동

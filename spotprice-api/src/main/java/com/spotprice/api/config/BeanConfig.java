@@ -2,6 +2,7 @@ package com.spotprice.api.config;
 
 import com.spotprice.application.port.in.IssueAccessGrantUseCase;
 import com.spotprice.application.port.out.AccessGrantRepositoryPort;
+import com.spotprice.application.port.out.AuditLogPort;
 import com.spotprice.application.port.out.ClockPort;
 import com.spotprice.application.port.out.EventPublisherPort;
 import com.spotprice.application.port.out.LockManagerPort;
@@ -33,8 +34,9 @@ public class BeanConfig {
     @Bean
     public OfferQuoteService offerQuoteService(OfferRepositoryPort offerRepository,
                                                ClockPort clock,
-                                               PriceCalculator priceCalculator) {
-        return new OfferQuoteService(offerRepository, clock, priceCalculator);
+                                               PriceCalculator priceCalculator,
+                                               AuditLogPort auditLogPort) {
+        return new OfferQuoteService(offerRepository, clock, priceCalculator, auditLogPort);
     }
 
     @Bean
@@ -56,15 +58,18 @@ public class BeanConfig {
                                      OrderRepositoryPort orderRepository,
                                      LockManagerPort lockManager,
                                      ClockPort clock,
-                                     PriceCalculator priceCalculator) {
-        return new OrderService(offerRepository, orderRepository, lockManager, clock, priceCalculator);
+                                     PriceCalculator priceCalculator,
+                                     AuditLogPort auditLogPort) {
+        return new OrderService(offerRepository, orderRepository, lockManager, clock, priceCalculator, auditLogPort);
     }
 
     @Bean
     public PaymentService paymentService(OrderRepositoryPort orderRepository,
                                          PaymentPort paymentPort,
-                                         EventPublisherPort eventPublisher) {
-        return new PaymentService(orderRepository, paymentPort, eventPublisher);
+                                         EventPublisherPort eventPublisher,
+                                         AuditLogPort auditLogPort,
+                                         ClockPort clock) {
+        return new PaymentService(orderRepository, paymentPort, eventPublisher, auditLogPort, clock);
     }
 
     @Bean

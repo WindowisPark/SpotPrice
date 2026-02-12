@@ -1,8 +1,11 @@
 package com.spotprice.application.service;
 
+import com.spotprice.application.dto.AuditEvent;
+import com.spotprice.application.dto.AuditEventType;
 import com.spotprice.application.dto.command.CreateOrderCommand;
 import com.spotprice.application.dto.result.OrderResult;
 import com.spotprice.application.port.in.CreateOrderUseCase;
+import com.spotprice.application.port.out.AuditLogPort;
 import com.spotprice.application.port.out.ClockPort;
 import com.spotprice.application.port.out.LockManagerPort;
 import com.spotprice.application.port.out.OfferRepositoryPort;
@@ -20,6 +23,7 @@ import com.spotprice.domain.order.Order;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.Optional;
 
 public class OrderService implements CreateOrderUseCase {
@@ -29,17 +33,20 @@ public class OrderService implements CreateOrderUseCase {
     private final LockManagerPort lockManager;
     private final ClockPort clock;
     private final PriceCalculator priceCalculator;
+    private final AuditLogPort auditLogPort;
 
     public OrderService(OfferRepositoryPort offerRepository,
                         OrderRepositoryPort orderRepository,
                         LockManagerPort lockManager,
                         ClockPort clock,
-                        PriceCalculator priceCalculator) {
+                        PriceCalculator priceCalculator,
+                        AuditLogPort auditLogPort) {
         this.offerRepository = offerRepository;
         this.orderRepository = orderRepository;
         this.lockManager = lockManager;
         this.clock = clock;
         this.priceCalculator = priceCalculator;
+        this.auditLogPort = auditLogPort;
     }
 
     @Override
@@ -83,6 +90,12 @@ public class OrderService implements CreateOrderUseCase {
             // 7. 주문 생성
             Order order = new Order(command.userId(), offer.getId(), serverPrice.amount(), key, now);
             Order saved = orderRepository.save(order);
+
+            // 8. 감사 로그
+            auditLogPort.log(new AuditEvent(
+                    AuditEventType.OFFER_SOLD, command.userId(), "OFFER", offer.getId(),
+                    Map.of("soldPrice", serverPrice.amount(), "orderId", saved.getId()),
+                    now));
 
             return toResult(saved);
         });
